@@ -11,6 +11,8 @@ class SHOOTER_API AShooterCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+// Default
+
 public:
 	// Sets default values for this character's properties
 	AShooterCharacter();
@@ -26,6 +28,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+// Features
+
 private:
 
 	// Camera Components
@@ -33,6 +37,18 @@ private:
 	class USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseLookupRate;
+
+protected:
+
+	// Input Movement
+	void MoveForward(float value);
+	void MoveRight(float value);
+	void TurnAtRate(float rate);
+	void LookupAtRate(float rate);
 
 public:
 

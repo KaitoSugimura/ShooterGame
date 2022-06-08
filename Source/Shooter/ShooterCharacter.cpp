@@ -5,7 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 // Sets default values
-AShooterCharacter::AShooterCharacter()
+AShooterCharacter::AShooterCharacter():
+	BaseTurnRate(45.f),
+	BaseLookupRate(45.f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,5 +43,47 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	check(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AShooterCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookupRate", this, &AShooterCharacter::LookupAtRate);
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+}
+
+void AShooterCharacter::MoveForward(float value)
+{
+	if(Controller != nullptr && value != 0){
+		const FRotator Rotation{ Controller->GetControlRotation() };
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
+		const FVector Direction{ FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X)};
+		AddMovementInput(Direction, value);
+	}
+}
+
+void AShooterCharacter::MoveRight(float value)
+{
+	if(Controller != nullptr && value != 0){
+		const FRotator Rotation{ Controller->GetControlRotation() };
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
+		const FVector Direction{ FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y)};
+		AddMovementInput(Direction, value);
+	}
+}
+
+void AShooterCharacter::TurnAtRate(float rate)
+{
+	AddControllerYawInput(rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AShooterCharacter::LookupAtRate(float rate)
+{
+	AddControllerPitchInput(rate * BaseLookupRate * GetWorld()->GetDeltaSeconds());
 }
 
