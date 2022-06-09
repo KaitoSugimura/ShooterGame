@@ -115,5 +115,11 @@ void AShooterCharacter::FireWeapon()
 			UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSound, SocketTransform.GetLocation());
 		}
 	}
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && HipFireMontage){
+		AnimInstance->Montage_Play(HipFireMontage);
+		AnimInstance->Montage_JumpToSection(FName("StartFire"));
+	}
 }
 
