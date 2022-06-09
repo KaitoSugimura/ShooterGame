@@ -42,6 +42,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookupRate;
 
+	// Gunshots
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class USoundCue* FireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystem* MuzzleFlash;
+
 protected:
 
 	// Input Movement
@@ -49,6 +55,8 @@ protected:
 	void MoveRight(float value);
 	void TurnAtRate(float rate);
 	void LookupAtRate(float rate);
+
+	void FireWeapon();
 
 public:
 
